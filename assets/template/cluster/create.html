@@ -1,0 +1,61 @@
+<md-dialog flex="66" aria-label="Create Cluster" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>新建集群</h2>
+      <span style="text-align:center;" flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="clusterNew.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;">
+    <form name="clusterForm" style="margin:34px 24%;">
+      <md-input-container class="md-block">
+        <label>集群名称</label>
+        <md-icon><ng-md-icon icon="local_offer"></ng-md-icon></md-icon>
+        <input required ng-pattern="/^[0-9a-zA-Z_-]+$/" name="cluster" ng-model="clusterNew.name">
+        <div class="hint hint-icon">格式: <code>^[0-9a-zA-Z_-]+$</code></div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>集群描述</label>
+        <md-icon><ng-md-icon icon="assignment"></ng-md-icon></md-icon>
+        <input name="description" ng-model="clusterNew.description">
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>从节点数</label>
+        <md-icon><ng-md-icon icon="link"></ng-md-icon></md-icon>
+        <input name="slaves" type="number" ng-model="clusterNew.slaves" required>
+        <div class="hint md-has-icon" style="margin-left:34px;">每个主节点的从节点数</div>
+        <div ng-messages="clusterForm.clusterNew.slaves.$error"></div>
+      </md-input-container>
+      <div layout="row">
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="clusterNew.addNode()">
+          <md-tooltip md-direction="top">添加节点</md-tooltip>
+          <ng-md-icon icon="add"></ng-md-icon>
+        </md-button>
+      </div>
+      <div flex layout="row" style="align-items:center;" ng-repeat="entry in clusterNew.nodeEntries">
+        <md-input-container flex>
+          <label>主机</label>
+          <md-icon><ng-md-icon icon="computer"></ng-md-icon></md-icon>
+          <input name="host_{{ entry.index }}" ng-model="entry.host">
+        </md-input-container>
+        <md-input-container flex>
+          <label>端口</label>
+          <input name="port_{{ entry.index }}" ng-model="entry.port">
+          <div class="hint">端口可以是一个区间, 如: 8000-8005</div>
+        </md-input-container>
+        <md-button ng-click="clusterNew.deleteEntry(entry)" class="md-icon-button" style="top:-9px;">
+          <md-tooltip>删除节点</md-tooltip>
+          <ng-md-icon icon="delete" size="20" style="fill:#A2A2A2;margin-left:2px;"></ng-md-icon>
+        </md-button>
+      </div>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="clusterNew.commit()" cv-wait="clusterNew.submitting">提交</cv-submit>
+    <md-button ng-click="clusterNew.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

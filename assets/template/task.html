@@ -1,0 +1,32 @@
+<md-list>
+  <md-table-container>
+    <table md-table>
+      <thead md-head ng-if="task.items.length > 0">
+        <tr md-row>
+          <th md-column>任务 ID</th>
+          <th md-column>操作</th>
+          <th md-column>创建时间</th>
+          <th md-column>状态更新时间</th>
+          <th md-column>执行状态</th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row ng-repeat="item in task.items">
+          <td md-cell>{{ item.id }}</td>
+          <td md-cell>{{ item.operation }}</td>
+          <td md-cell>{{ item.createAt }}</td>
+          <td md-cell>{{ item.updateAt }}</td>
+          <td md-cell><span class="cv-label"
+              ng-class="item.statusClass">{{ item.statusLabel }}</span></td>
+          <td md-cell>
+            <md-button ui-sref="i({action:'task', taskId:item.id})">查看详情</md-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+  <md-table-pagination ng-if="task.itemCount > 10" md-limit="10" md-options="[10]" md-page="task.page"
+    md-total="{{ task.itemCount }}" md-on-paginate="task.onPaginate" md-page-select>
+  </md-table-pagination>
+  <div cv-progress="task.loading" cv-diameter="60"></div>
+</md-list>

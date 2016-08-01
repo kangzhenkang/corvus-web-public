@@ -1,0 +1,19 @@
+<md-dialog flex="66" aria-label="create proxy" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>更新代理</h2>
+      <span flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="proxyUpdate.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;margin:9px 20%;">
+    <cv-conf cv-model="proxyUpdate" disable-host="true"></cv-conf>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="proxyUpdate.commit()" cv-wait="proxyUpdate.submitting">提交</cv-submit>
+    <md-button ng-click="proxyUpdate.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

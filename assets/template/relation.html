@@ -1,0 +1,41 @@
+<md-dialog>
+  <md-dialog-content>
+
+    <div style="padding:9px 44px;">
+      <div flex layout="column">
+        <md-input-container ng-show="relation.items.length > 0">
+          <label>搜索</label>
+          <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
+          <input ng-model="relation.filter">
+        </md-input-container>
+      </div>
+
+      <md-table-container ng-show="relation.items.length > 0">
+        <table md-table>
+          <thead md-head>
+            <tr md-row>
+              <th md-column>主节点</th>
+              <th md-column>从节点</th>
+            </tr>
+          </thead>
+          <tbody md-body>
+            <tr md-row ng-repeat="item in relation.items | filter:relation.filter">
+              <td md-cell>{{ item.master.host }}:{{ item.master.port }}</td>
+              <td md-cell>
+                <span style="padding-right:9px;"
+                  ng-repeat="slave in item.slaves">{{ slave.host }}:{{ slave.port }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+    </div>
+    <div cv-progress="relation.loadingNodes" cv-diameter="40"></div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-disable="relation.loadingNodes"
+      cv-click="relation.updateNodes()">更新集群节点列表</cv-submit>
+    <md-button ng-click="relation.close()">关闭</md-button>
+  </md-dialog-actions>
+</md-dialog>

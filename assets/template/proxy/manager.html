@@ -1,0 +1,28 @@
+<md-list>
+  <md-list-item style="padding-bottom:9px;">
+    <div class="md-list-item-text"><p>符合条件的代理共 {{ manager.count }} 个</p></div>
+    <span flex></span>
+    <cv-submit cv-wait="manager.registering" class="md-raised md-primary" cv-click="manager.registerAll()" cv-class="md-raised md-primary">注册所有代理</cv-submit>
+    <md-button class="md-raised md-primary" ng-click="manager.updateAll()">更新所有代理</md-button>
+  </md-list-item>
+  <md-list-item class="cv-list cv-hover-container md-2-line" ng-repeat="item in manager.items | orderBy: 'cluster'" style="padding-left:8px;">
+
+    <div class="md-list-item-text" flex="20"><p>#{{ item.id }} ({{ item.cluster }})</p></div>
+    <div class="md-list-item-text" flex="20"><h4>{{ item.host }}:{{ item.port }}</h4></div>
+    <div class="md-list-item-text" flex="10"><p><span class="cv-label" ng-class="item.statusClass">{{ item.alive ? '正常' : '异常' }}</span></p></div>
+    <div class="md-list-item-text" flex="10"><p>v{{ item.version }}</p></div>
+
+    <div class="md-list-item-text" style="justify-content:flex-end; align-items:center;" layout="row">
+      <cv-submit cv-wait="item.registering" ng-if="!item.registered" cv-click="manager.registerProxy(item)">注册到 huskar</cv-submit>
+      <cv-submit cv-wait="item.deregistering" ng-if="item.registered" cv-click="manager.deregisterProxy(item)">从 huskar 删除</cv-submit>
+      <cv-submit cv-disable="item.disableUpdate" cv-click="manager.updateProxy(item)" cv-wait="item.loading">更新</cv-submit>
+      <md-button class="md-icon-button cv-hover-button" ng-click="manager.executeCommand(item)" ng-disabled="!item.alive">
+        <md-tooltip md-direction="top">执行指令</md-tooltip>
+        <ng-md-icon icon="laptop_mac"></ng-md-icon>
+      </md-button>
+    </div>
+
+    <md-divider ng-if="!$last"></md-divider>
+  </md-list-item>
+  <div cv-progress="manager.loading" cv-diameter="60"></div>
+</md-list>

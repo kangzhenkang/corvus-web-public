@@ -1,0 +1,36 @@
+<md-list>
+  <md-list-item class="cv-list cv-hover-container md-3-line" ng-repeat="item in node.items" style="align-items:center;">
+    <span style="margin:6px 16px 6px 8px;"
+      ng-style="{'background-color': item.alive ? (item.idle ? '#4CAF50' : '#FBC02D') : '#F44336'}"
+      class="md-avatar decorated-title node-status">{{ item.alive ? (item.idle ? '空闲' : '在役') : '异常' }}</span>
+    <div class="md-list-item-text" flex="20">
+      <div class="md-list-item-text" layout="column">
+        <div>
+          <a class="link-button" ng-disabled="!item.alive" ui-sref="i({action:'node',nodeId:{{item.nodeId}}})">{{ item.host }}:{{ item.port }}</a>
+        </div>
+        <p><span ng-if="!item.idle && item.alive">{{ item.role == 'master' ? '主节点' : '从节点' }}</span></p>
+        <p s><span ng-if="!item.idle"><span>{{ item.clusterName }}</span></span></p>
+      </div>
+    </div>
+    <div class="md-list-item-text" flex ng-if="item.alive" style="text-align:center;">
+      <span class="cv-label" ng-class="item.memClass">{{ item.memPercent }}</span>
+      <span style="font-size:14px;">{{ item.usedMemSpec }} / {{ item.maxMemSpec }}</span>
+    </div>
+    <div class="md-list-item-text" flex style="text-align:end;">
+      <span ng-if="item.clusterName">
+        <md-button aria-label="reshard" ng-click="node.popupReshard(item)" ng-disabled="item.role == 'slave'" class="md-raised md-primary">
+          迁移槽位
+        </md-button>
+        <md-button aria-lebal="quit cluster" ng-click="node.quitCluster(item)" class="md-raised md-warn">
+          退出集群
+        </md-button>
+      </span>
+      <span ng-if="!item.clusterName">
+        <md-button aria-label="remove" ng-click="node.remove(item)" class="md-raised md-warn">移除</md-button>
+      </span>
+      <md-button class="md-raised" ng-click="node.executeCommand(item)" ng-disabled="!item.alive">执行命令</md-button>
+    </div>
+    <md-divider ng-if="!$last"></md-divider>
+  </md-list-item>
+  <div cv-progress="node.loadingNodes" cv-diameter="60"></div>
+</md-list>

@@ -1,0 +1,21 @@
+<md-list>
+  <md-list-item style="padding-bottom:9px;">
+    <div class="md-list-item-text"><p>符合条件的 AGENT 共 {{ manager.count }} 个</p></div>
+    <span flex></span>
+    <md-button class="md-raised md-primary" ng-click="manager.updateAll()">更新所有 AGENT</md-button>
+  </md-list-item>
+  <md-list-item class="cv-list cv-hover-container md-2-line" ng-repeat="item in manager.items | orderBy: 'cluster'" style="padding-left:8px;">
+
+    <div class="md-list-item-text"><p>#{{ item.id }}</p></div>
+    <div class="md-list-item-text"><h4>{{ item.host }}:{{ item.port }}</h4></div>
+    <div class="md-list-item-text"><p><span class="cv-label" ng-class="item.statusClass">{{ item.alive ? '正常' : '异常' }}</span></p></div>
+    <div class="md-list-item-text"><p>v{{ item.version }}</p></div>
+
+    <div class="md-list-item-text" style="justify-content:flex-end; align-items:center;" layout="row">
+      <cv-submit cv-disable="item.disableUpdate" cv-click="manager.updateAgent(item)" cv-wait="item.loading">更新</cv-submit>
+    </div>
+
+    <md-divider ng-if="!$last"></md-divider>
+  </md-list-item>
+  <div cv-progress="manager.loading" cv-diameter="60"></div>
+</md-list>

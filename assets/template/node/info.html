@@ -1,0 +1,113 @@
+<md-list>
+  <md-list-item>
+    <span class="decorated-title">{{ nodeInfo.info.host }}:{{ nodeInfo.info.port }}</span>
+    <p flex></p>
+    <div ng-if="nodeInfo.info.clusterName">
+      <md-button ng-if="nodeInfo.info.role == 'master'" ng-click="nodeInfo.popupReshard(nodeInfo.info)"
+        class="md-raised md-primary">迁移槽位</md-button>
+      <md-button ng-click="nodeInfo.quitCluster(nodeInfo.info)" class="md-raised md-warn">退出集群</md-button>
+    </div>
+    <md-button class="md-raised" ng-click="nodeInfo.executeCommand(nodeInfo.info)"
+      ng-disabled="!nodeInfo.info.alive">执行命令</md-button>
+  </md-list-item>
+  <md-list-item layout="row" flex>
+    <p flex="25">节点 ID</p>
+    <p class="table-value">{{ nodeInfo.info.id }}</p>
+  </md-list-item>
+  <md-divider></md-divider>
+  <md-list-item layout="row">
+    <p flex="25">版本</p>
+    <p class="table-value">{{ nodeInfo.info.version }}</p>
+  </md-list-item>
+  <md-divider></md-divider>
+  <md-list-item layout="row">
+    <p flex="25">内存</p>
+    <p ng-if="nodeInfo.info.alive" class="table-value">{{ nodeInfo.info.usedMemory }} / {{ nodeInfo.info.maxMemory }}</p>
+    <p ng-if="!nodeInfo.info.alive"><span class="cv-label label-red">异常</span></p>
+  </md-list-item>
+  <md-divider></md-divider>
+  <md-list-item layout="row">
+    <p flex="25">槽位数</p>
+    <p class="table-value">{{ nodeInfo.info.slots || '-' }}</p>
+  </md-list-item>
+  <md-divider></md-divider>
+  <md-list-item layout="row">
+    <p flex="25">所属集群</p>
+    <p class="table-value">{{ nodeInfo.info.clusterName || '-' }}</p>
+  </md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-list-item flex>
+    <div layout="row" flex>
+      <p flex="25">统计</p>
+      <div layout="row" style="margin-left:-16px;">
+        <div style="padding-right:24px;" layout="column">
+          <md-subheader>CPU</md-subheader>
+          <md-table-container flex>
+            <table md-table>
+              <tbody md-body>
+                <tr md-row>
+                  <td md-cell>用户态累计</td>
+                  <td md-cell>{{ nodeInfo.info.userCpu }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>内核态累计</td>
+                  <td md-cell>{{ nodeInfo.info.sysCpu }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>总运行时间</td>
+                  <td md-cell>{{ nodeInfo.info.totalRunTime }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </md-table-container>
+        </div>
+
+        <div style="padding-right:24px" layout="column">
+          <md-subheader>内存</md-subheader>
+          <md-table-container flex>
+            <table md-table>
+              <tbody md-body>
+                <tr md-row>
+                  <td md-cell>已使用内存</td>
+                  <td md-cell>{{ nodeInfo.info.usedMemory }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>常驻集</td>
+                  <td md-cell>{{ nodeInfo.info.rss }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </md-table-container>
+        </div>
+
+        <div layout="column">
+          <md-subheader>存储</md-subheader>
+          <md-table-container flex>
+            <table md-table>
+              <tbody md-body>
+                <tr md-row>
+                  <td md-cell>Keyspace Hits</td>
+                  <td md-cell>{{ nodeInfo.info.keyspaceHits }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>Keyspace Misses</td>
+                  <td md-cell>{{ nodeInfo.info.keyspaceMisses }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>Expired Keys</td>
+                  <td md-cell>{{ nodeInfo.info.expiredKeys }}</td>
+                </tr>
+                <tr md-row>
+                  <td md-cell>Evicted Keys</td>
+                  <td md-cell>{{ nodeInfo.info.evictedKeys }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </md-table-container>
+        </div>
+      </div>
+    </div>
+  </md-list-item>
+</md-list>

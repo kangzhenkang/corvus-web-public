@@ -1,0 +1,2 @@
+include README.md
+include corvus_web/static/*/*

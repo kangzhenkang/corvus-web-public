@@ -1,0 +1,44 @@
+bind {{ bind }}
+node {{ node }}
+thread {{ thread }}
+
+# debug, info, warn, error
+loglevel info
+syslog 1
+
+# Close the connection after client idle for `client_timeout` seconds.
+# No response after `server_timeout` seconds waiting for redis-server
+# connection to redis-server will be closed.
+#
+# Value 0 means never timeout.
+#
+# Default 0
+#
+client_timeout {{ client_timeout }}
+server_timeout {{ server_timeout }}
+
+# Statsd config
+# metrics:
+#   corvus.<cluster>.<host-port>.<value label>
+#
+#   corvus.default.localhost-12345.connected_clients
+#   corvus.default.localhost-12345.completed_commands
+#   corvus.default.localhost-12345.used_cpu_sys
+#   corvus.default.localhost-12345.used_cpu_user
+#   corvus.default.localhost-12345.latency
+#   corvus.default.localhost-12345.redis-node.127-0-0-1-8000.bytes.{send,recv}
+#
+# Cluster annotation. Using `cluster` to add a cluster name to metrics.
+#
+cluster {{ cluster }}
+#
+# Metrices are sent using udp socket. Using `statsd` config to
+# set statsd server address. Every `metric_interval` senconds
+# will produce a set of metrices.
+#
+statsd {{ statsd }}
+metric_interval 10
+
+{% if bufsize is defined %}
+bufsize {{ bufsize }}
+{% endif %}

@@ -1,0 +1,66 @@
+<md-dialog flex="66" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>迁移槽位</h2>
+      <span style="text-align:center;" flex>{{ reshard.host }}:{{ reshard.port }}</span>
+      <md-button aria-label="cancel" class="md-icon-button" ng-click="reshard.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;">
+    <div layout="row" style="align-items:center;padding:24px 0;">
+      <span class="md-subheader" style="padding:0 6%;"
+        >已加载 {{ reshard.nodes.length + 1 }} 个主节点</span>
+      <span flex></span>
+      <md-button aria-label="divide" style="margin-right:6%;" class="md-raised" ng-click="reshard.divide()">均分槽位</md-button>
+    </div>
+    <form name="reshardForm" style="padding:0 6%;">
+      <table md-table>
+        <thead md-head>
+          <tr md-row>
+            <th md-column>节点 ID</th>
+            <th md-column>节点地址</th>
+            <th md-column>槽位数</th>
+            <th md-column>至此节点槽位数</th>
+            <th md-column>迁移后槽位数</th>
+          </tr>
+        </thead>
+        <tbody md-body>
+          <tr md-row>
+            <td md-cell>{{ reshard.currentNode.id }}</td>
+            <td md-cell>{{ reshard.currentNode.host }}:{{ reshard.currentNode.port }}</td>
+            <td md-cell>{{ reshard.currentNode.slots }}</td>
+            <td md-cell></td>
+            <td md-cell>{{ reshard.currentNodeSlotsCount() }}</td>
+          </tr>
+          <tr md-row ng-repeat="node in reshard.nodes">
+            <td md-cell>{{ node.id }}</td>
+            <td md-cell>{{ node.host }}:{{ node.port }}</td>
+            <td md-cell>{{ node.slots }}</td>
+            <td md-cell>
+              <md-input-container style="margin:0;top:12px;" md-no-float>
+                <input aria-label="reshard slots" ng-model="node.reshardSlots" type="number"
+                  max="{{ reshard.currentNode.slots }}" min="0">
+                <div ng-messages="reshardForm.node.reshardSlots.$error" multiple md-auto-hide="false">
+                  <div ng-message="max">槽位数过大</div>
+                  <div ng-message="min">槽位数不能小于0</div>
+                </div>
+              </md-input-container>
+            </td>
+            <td md-cell>{{ reshard.slotsCount(node) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div layout="row" ng-if="reshard.page < reshard.pages">
+        <md-button ng-disabled="reshard.loadingNodes" ng-click="reshard.loadMore()">more</md-button>
+      </div>
+    </form>
+    <div cv-progress="reshard.loadingNodes" cv-diameter="40"></div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <md-button aria-label="commit" ng-click="reshard.resharding()">提交</md-button>
+    <md-button aria-label="cancel" ng-click="reshard.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

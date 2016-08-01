@@ -1,0 +1,31 @@
+<md-dialog flex="66" aria-label="Cluster add node" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>执行命令</h2>
+      <span style="text-align:center;" flex>{{ cmd.host }}:{{ cmd.port }}</span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="cmd.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div style="padding:16px 24% 0 24%;height:100%;" flex layout="column">
+      <md-input-container style="margin-bottom:0;">
+        <label>输入 Redis 命令</label>
+        <md-icon><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon></md-icon>
+        <input name="command" ng-model="cmd.command" cv-enter="cmd.executeCommand()">
+        <div style="position:absolute;right:0;top:-2px;" cv-progress="cmd.loading" cv-diameter="40"></div>
+      </md-input-container>
+    </div>
+      <div ng-if="cmd.messages.length > 0" style="background-color:#F5F5F5;padding:9px;overflow:auto;">
+        <div layout="column" style="margin-bottom:9px;" ng-repeat="msg in cmd.messages">
+          <code style="margin-bottom:4px;">
+            <span><span style="margin-right:4px;">$</span>{{ msg.cmd }}</span>
+          </code>
+          <code>
+            <span style="white-space:pre;">{{ msg.result }}</span>
+          </code>
+        </div>
+      </div>
+  </md-dialog-content>
+</md-dialog>

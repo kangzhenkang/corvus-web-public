@@ -1,0 +1,59 @@
+<md-dialog flex="66" aria-label="Cluster add node" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>添加节点</h2>
+      <span style="text-align:center;" flex>{{ clusterNode.clusterName }}</span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="clusterNode.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;">
+    <form name="clusterNodeForm" style="margin: 34px 14%;">
+      <div layout="row" style="align-items:center;">
+        <span class="md-subheader" style="margin-right:13px;">集群当前有 {{ clusterNode.nodeCount }} 个节点</span>
+        <span class="md-subheader"
+          ng-if="clusterNode.entries.length > 0">新添加 {{ clusterNode.entries.length }} 个节点</span>
+        <span flex></span>
+        <md-button class="md-raised" ng-click="clusterNode.addEntry(false)">添加主节点</md-button>
+        <md-button class="md-raised" ng-click="clusterNode.addEntry(true)">添加从节点</md-button>
+      </div>
+      <md-list>
+        <md-list-item ng-repeat="entry in clusterNode.entries">
+          <div layout="row" flex>
+            <md-input-container flex style="margin-right:10px;">
+              <label>主机</label>
+              <md-icon style="text-align:center;" ng-switch="entry.isSlave">
+                <span class="md-icon name" ng-switch-when="true">从</span>
+                <span class="md-icon name" ng-switch-when="false">主</span>
+              </md-icon>
+              <input ng-model="entry.host">
+            </md-input-container>
+            <md-input-container flex style="margin-right:10px;">
+              <label>端口</label>
+              <input ng-model="entry.port">
+              <div class="hint">如: 8889,8890,7000-7002</div>
+            </md-input-container>
+            <md-input-container ng-if="entry.isSlave" flex>
+              <label>主</label>
+              <md-select ng-model="entry.master">
+                <md-option ng-repeat="master in clusterNode.masterNodes" value="{{ master.id }}">{{ master.host }}:{{ master.port }}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container>
+              <md-button aria-label="Delete node" ng-click="clusterNode.deleteEntry(entry)" class="md-icon-button">
+                <md-tooltip>删除节点</md-tooltip>
+                <ng-md-icon icon="delete" size="20" style="fill:#A2A2A2;margin-left:2px;"></ng-md-icon>
+              </md-button>
+            </md-input-container>
+          </div>
+        </md-list-item>
+      </md-list>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="clusterNode.addNodes()" cv-wait="clusterNode.submitting">提交</cv-submit>
+    <md-button ng-click="clusterNode.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

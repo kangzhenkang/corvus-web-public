@@ -1,0 +1,12 @@
+[program:corvus-{{ bind }}-{{ version }}-{{ sha }}]
+command=/opt/corvus/corvus-{{ version }}/src/corvus /etc/corvus/corvus-{{ bind }}.conf
+autostart=true
+autorestart=unexpected
+startsecs=3
+startretries=3
+stopsignal=TERM
+stopwaitsecs=30
+stopasgroup=true
+killasgroup=true
+stdout_logfile=syslog
+stderr_logfile=syslog

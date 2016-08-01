@@ -1,0 +1,270 @@
+<md-list>
+  <div ng-repeat="item in cluster.items">
+    <md-list-item class="cv-list md-2-line" style="align-items:center;" ng-class="{active: item.showNodes}">
+      <div class="md-list-item-text cv-list-item" flex="20" style="padding-left:8px;overflow:hidden;">
+        <p style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">{{ item.name }}</p>
+      </div>
+
+      <div class="md-list-item-text" style="padding-left:8px;overflow:hidden;">
+        <div ng-dblclick="item.descEditing=true;" class="cv-text-container">
+          <h3 ng-if="!item.descEditing && item.description">{{ item.description }}</h3>
+          <i ng-if="!item.descEditing && !item.description" style="color:#828282;">(not set)</i>
+          <md-input-container ng-if="item.descEditing" style="padding:15px 0 0;margin:0;width:100%;">
+            <input cv-focus aria-label="description" ng-model="item.newFields.description" ng-blur="cluster.editCluster(item)">
+          </md-input-container>
+        </div>
+      </div>
+
+      <div class="md-list-item-text" flex="20">
+        <md-button cv-nodes-toggle="{{ item.name }}" id="{{ item.name }}" aria-label="down nodes / all nodes"
+          class="md-button-toggle" style="margin-right:90px;"
+          ui-sref="cluster({'#': '{{ item.name }}'})" ng-click="cluster.toggleNodes(item)">
+          <div flex layout="row" style="padding-left:6px;">
+            <span style="margin-right:9px; text-overflow:ellipsis; max-width:87px; overflow:hidden;">
+              <span ng-if="item.failNodeCount > 0" style="color: red;">{{ item.failNodeCount }} / {{ item.nodeCount }}</span>
+              <span ng-if="item.failNodeCount == 0">{{ item.failNodeCount }} / {{ item.nodeCount }}</span>
+            </span>
+            <span flex></span>
+            <span class="md-toggle-icon" ng-class="{toggled: item.showNodes}">
+              <md-icon md-svg-src="md-toggle-arrow"></md-icon>
+            </span>
+          </div>
+        </md-button>
+      </div>
+
+      <div class="md-list-item-text" flex="20">
+        <span ng-if="!item.memClass" class="cv-label label-red">NaN</span>
+        <span ng-if="item.memClass" class="cv-label" ng-class="item.memClass">{{ item.memPercent }} / {{ item.hottestNodeMemPercent }}</span>
+        <span ng-if="item.migratingNodeNum > 0" class="cv-label">{{ item.migratingNodeNum }}个节点正在迁出槽</span>
+        <span ng-if="item.missingSlots > 0" class="cv-label label-red">缺失{{ item.missingSlots }}个槽</span>
+      </div>
+
+      <md-button class="md-icon-button md-button" ng-href="https://localhost?var-cluster={{ item.name }}" target="_blank">
+        <md-tooltip md-direction="top">监控面板</md-tooltip>
+        <ng-md-icon icon="info_outline"></ng-md-icon>
+      </md-button>
+      <md-button class="md-raised md-primary" ng-click="cluster.addNode(item)">添加节点</md-button>
+      <cv-submit cv-wait="item.loadingNodes" cv-class="md-raised md-primary" cv-click="cluster.addProxy(item)">创建代理</cv-submit>
+      <md-button class="md-raised md-warn" ng-click="cluster.deleteCluster(item)">删除集群</md-button>
+    </md-list-item>
+
+    <md-content ng-show="item.showNodes">
+      <md-table-container flex ng-if="cluster.globalNav.clusterDisplayStats">
+        <table md-table>
+          <thead md-head>
+            <tr md-row>
+              <th md-column>客户端数</th>
+              <th md-column>已处理命令</th>
+              <th md-column>expires / total keys</th>
+              <th md-column>misses / hits</th>
+            </tr>
+          </thead>
+          <tbody md-body>
+            <tr>
+              <td md-cell style="padding-top: 15px;padding-bottom: 15px;">{{ item.connected_clients }}</td>
+              <td md-cell>{{ item.total_commands_processed }}</td>
+              <td md-cell>{{ item.expires_keys }} / {{ item.total_keys }}</td>
+              <td md-cell>{{ item.keyspace_misses }} / {{ item.keyspace_hits }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+
+      <md-list>
+        <div layout="row">
+          <md-subheader>代理</md-subheader>
+          <div layout="column" flex>
+            <div layout="row" style="align-items:center;padding-left:16px;" ng-if="item.proxies.length <= 0">
+              <span>没有代理</span>
+              <span flex></span>
+              <md-button style="visibility:hidden;"></md-button>
+            </div>
+            <div ng-if="item.proxies.length > 0">
+              <div layout="row" style="padding-left:16px;align-items:center;font-size:13px;">
+                <b>共 {{ item.proxies.length }} 个代理</b>
+                <span flex></span>
+
+                <div ng-if="!cluster.globalNav.clusterDisplayStats" style="margin-right: 5px;">app id:</div>
+                <div ng-if="!cluster.globalNav.clusterDisplayStats" ng-dblclick="item.appEditing=true;" class="cv-text-container" style="width:160px; margin-right:10px;">
+                  <span ng-if="!item.appEditing">{{ item.newFields.register_app }}</span>
+                  <md-input-container ng-if="item.appEditing" style="padding:5px 0 0;margin:0;width:100%;height: 40px;">
+                    <input cv-focus aria-label="huskar application" ng-model="item.newFields.register_app" ng-blur="cluster.editCluster(item)">
+                  </md-input-container>
+                </div>
+                <div ng-if="!cluster.globalNav.clusterDisplayStats" style="margin-right: 5px;">cluster:</div>
+                <div ng-if="!cluster.globalNav.clusterDisplayStats" ng-dblclick="item.clusterEditing=true;" class="cv-text-container" style="width:160px; margin-right:8px;">
+                  <span ng-if="!item.clusterEditing">{{ item.newFields.register_cluster }}</span>
+                  <md-input-container ng-if="item.clusterEditing" style="padding:5px 0 0;margin:0;width:100%;height: 40px;">
+                    <input cv-focus aria-label="huskar cluster" ng-model="item.newFields.register_cluster" ng-blur="cluster.editCluster(item)">
+                  </md-input-container>
+                </div>
+
+                <md-button ng-click="cluster.getProxies(item)" class="md-raised md-icon-button">
+                  <md-tooltip md-direction="top">刷新</md-tooltip>
+                  <ng-md-icon icon="refresh"></ng-md-icon>
+                </md-button>
+                <md-button ng-disabled="item.proxySelected.length <= 0" ng-click="cluster.deleteProxies(item)"
+                  class="md-raised md-warn">删除代理</md-button>
+              </div>
+              <div style="position:relative;">
+                <md-table-container flex ng-if="cluster.globalNav.clusterDisplayStats">
+                  <table md-table>
+                    <thead md-head>
+                      <tr md-row>
+                        <th md-column>ID</th>
+                        <th md-column>地址</th>
+                        <th md-column>状态</th>
+                        <th md-column>客户端</th>
+                        <th md-column>已处理命令</th>
+                      </tr>
+                    </thead>
+                    <tbody md-body>
+                      <tr md-row ng-repeat="proxy in item.proxies">
+                        <td md-cell>{{ proxy.id }}</td>
+                        <td md-cell>{{ proxy.host }}:{{ proxy.port }}</td>
+                        <td md-cell>
+                          <span class="cv-label" ng-class="proxy.statusClass" style="white-space: nowrap;">{{ proxy.alive ? '正常' : '异常' }}</span>
+                        </td>
+                        <td md-cell>{{ proxy.connectedClients }}</td>
+                        <td md-cell>{{ proxy.completedCommands }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </md-table-container>
+                <md-table-container flex ng-if="!cluster.globalNav.clusterDisplayStats">
+                  <table md-table md-row-select ng-model="item.proxySelected">
+                    <thead md-head>
+                      <tr md-row>
+                        <th md-column>ID</th>
+                        <th md-column>地址</th>
+                        <th md-column>版本</th>
+                        <th md-column>线程数</th>
+                      </tr>
+                    </thead>
+                    <tbody md-body>
+                      <tr md-row md-select="proxy" md-select-id="{{ proxy.id }}" class="cv-hover-container" ng-repeat="proxy in item.proxies">
+                        <td md-cell>{{ proxy.id }}</td>
+                        <td md-cell>{{ proxy.host }}:{{ proxy.port }}</td>
+                        <td md-cell>{{ proxy.version }}</td>
+                        <td md-cell>{{ proxy.threadsNum }}</td>
+                        <td md-cell style="width:88px;padding:0;">
+                          <cv-submit cv-wait="proxy.registering" ng-if="!proxy.registered" cv-click="cluster.registerProxy(proxy, item)">注册到 huskar</cv-submit>
+                          <cv-submit cv-wait="proxy.deregistering" ng-if="proxy.registered" cv-click="cluster.deregisterProxy(proxy, item)">从 huskar 删除</cv-submit>
+                        </td>
+                        <td md-cell style="width:88px;padding:0;">
+                          <cv-submit cv-disable="proxy.disableUpdate" cv-click="cluster.updateProxy(proxy)" cv-wait="proxy.loading">更新</cv-submit>
+                        </td>
+                        <td md-cell style="width:40px;padding:0;">
+                          <md-button class="md-icon-button cv-hover-button" ng-click="cluster.executeCommand(proxy)" ng-disabled="!proxy.alive">
+                            <md-tooltip md-direction="top">执行指令</md-tooltip>
+                            <ng-md-icon icon="laptop_mac"></ng-md-icon>
+                          </md-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </md-table-container>
+                <div cv-abs='true' cv-progress="item.loadingProxies" cv-diameter="40"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <md-divider></md-divider>
+        <div layout="row" style="margin-top:12px;margin-bottom:44px;">
+          <md-subheader>节点</md-subheader>
+          <div layout="column" flex>
+            <div layout="row" style="padding-left:16px;align-items:center;font-size:13px;">
+              <b>共 {{ item.nodeCount }} 个节点(</b>
+              <b>主 {{ item.masters }}</b>
+              <b style="padding-left:4px;">从 {{ item.slaves }})</b>
+              <md-input-container style="margin:0 0 -20px 18px;">
+                <label>筛选</label>
+                <input ng-model="item.filterNodes">
+              </md-input-container>
+              <span flex></span>
+              <md-button ng-click="cluster.refreshNodes(item)" class="md-raised md-icon-button">
+                <md-tooltip md-direction="top">刷新</md-tooltip>
+                <ng-md-icon icon="refresh"></ng-md-icon>
+              </md-button>
+              <md-button ng-click="cluster.getRelation(item)" class="md-raised md-icon-button">
+                <md-tooltip md-direction="top">主从关系</md-tooltip>
+                <ng-md-icon icon="settings_ethernet"></ng-md-icon>
+              </md-button>
+              <md-button class="md-raised" ng-click="cluster.splitSlots(item)">均分槽位</md-button>
+              <md-button ng-disabled="item.selected.length <= 0" ng-click="cluster.deleteNodes(item)"
+                class="md-raised md-warn">删除节点</md-button>
+            </div>
+            <div style="position:relative;">
+              <md-table-container flex ng-if="cluster.globalNav.clusterDisplayStats">
+                <table md-table>
+                  <thead md-head>
+                    <tr md-row>
+                      <th md-column>地址</th>
+                      <th md-column>内存</th>
+                      <th md-column>客户端</th>
+                      <th md-column>已处理命令</th>
+                      <th md-column>expire/total keys</th>
+                      <th md-column>misses/hits</th>
+                    </tr>
+                  </thead>
+                  <tbody md-body>
+                    <tr md-row ng-repeat="node in item.nodes | filter:item.filterNodes">
+                      <td md-cell><a class="link-button" ui-sref="i({action:'node', nodeId:{{node.nodeId}}})">{{ node.host }}:{{ node.port }}</a></td>
+                      <td md-cell>
+                        <span ng-if="node.alive" style="white-space: nowrap;">
+                          <span class="cv-label" ng-class="node.memClass">{{ node.memPercent }}</span>
+                          <span>{{ node.usedMemSpec }} / {{ node.maxMemSpec }}</span>
+                        </span>
+                        <span ng-if="!node.alive">
+                          <span class="cv-label label-red">异常</span>
+                        </span>
+                      </td>
+                      <td md-cell>{{ node.connectedClients }}</td>
+                      <td md-cell>{{ node.totalCommandsProcessed }}</td>
+                      <td md-cell>{{ node.expiresKeys }} / {{ node.totalKeys }}</td>
+                      <td md-cell>{{ node.keyspaceMisses }} / {{ node.keyspaceHits }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </md-table-container>
+
+              <md-table-container flex ng-if="!cluster.globalNav.clusterDisplayStats">
+                <table md-table md-row-select ng-model="item.selected" ng-hide="item.nodes.length <= 0">
+                  <thead md-head>
+                    <tr md-row>
+                      <th md-column>地址</th>
+                      <th md-column>角色</th>
+                      <th md-column>槽位数</th>
+                    </tr>
+                  </thead>
+                  <tbody md-body>
+                    <tr md-row md-select="node" md-select-id="{{ node.id }}" class="cv-hover-container"
+                        ng-repeat="node in item.nodes | filter:item.filterNodes">
+                      <td md-cell><a class="link-button" ui-sref="i({action:'node', nodeId:{{node.nodeId}}})">{{ node.host }}:{{ node.port }}</a></td>
+                      <td md-cell>{{ node.role == 'master' ? '主': '从' }}</td>
+                      <td md-cell>{{ node.role == 'master' ? node.slots : '-' }}</td>
+                      <td md-cell style="width:40px;padding:0;">
+                        <md-button class="md-icon-button cv-hover-button" ng-click="cluster.executeCommand(node)" ng-disabled="!node.alive">
+                          <md-tooltip md-direction="top">执行命令</md-tooltip>
+                          <ng-md-icon icon="laptop_mac"></ng-md-icon>
+                        </md-button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </md-table-container>
+              <div layout="row" ng-if="item.page < item.pages">
+                <span flex></span>
+                <md-button class="md-raised" ng-click="cluster.loadMoreNodes(item)">more</md-button>
+              </div>
+              <div cv-abs='true' cv-progress="item.loadingNodes" cv-diameter="40"></div>
+            </div>
+          </div>
+        </div>
+      </md-list>
+    </md-content>
+
+    <md-divider ng-if="!$last"></md-divider>
+  </div>
+  <div cv-progress="cluster.loadingClusters" cv-diameter="60"></div>
+</md-list>

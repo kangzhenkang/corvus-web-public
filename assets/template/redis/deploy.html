@@ -1,0 +1,73 @@
+<md-dialog flex="66" aria-label="Deploy Redis" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>部署 Redis</h2>
+      <span style="text-align:center;" flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="redisDeploy.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content style="height:100%;">
+    <form name="redisDeployForm" style="margin: 34px 14%;">
+      <div layout="row" style="align-items:center;">
+        <md-input-container ng-if="redisDeploy.redisInstalled">
+          <label>redis版本</label>
+          <md-select ng-model="redisDeploy.selectedArchive">
+            <md-option ng-repeat="archive in redisDeploy.archives" value="{{ archive }}">
+              {{ archive }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <span flex></span>
+        <md-button style="color: red" ng-if="!redisDeploy.redisInstalled" class="md-raised" ng-click="redisDeploy.installRedis()">
+          打包redis
+        </md-button>
+        <md-button class="md-raised" ng-click="redisDeploy.addEntry()">添加节点</md-button>
+      </div>
+      <md-list>
+        <md-list-item ng-repeat="entry in redisDeploy.entries">
+          <div layout="row" flex>
+            <md-input-container flex style="margin-right:10px;">
+              <label>主机</label>
+              <input ng-model="entry.host" ng-change="redisDeploy.getNodeInstances(entry.host)" ng-model-options="{debounce: 1000}">
+              <div class="hint">
+                <div ng-if="redisDeploy.node[entry.host]" style="color: red">
+                  当前实例数: {{ redisDeploy.node[entry.host].instances_num }}
+                  当前内存占用: {{ redisDeploy.node[entry.host].mem_used_sum }} / {{ redisDeploy.node[entry.host].max_mem_sum }} / {{ redisDeploy.node[entry.host].total_mem  }}
+                </div>
+              </div>
+            </md-input-container>
+            <md-input-container flex style="margin-right:10px;">
+              <label>端口</label>
+              <input ng-model="entry.port">
+              <div class="hint">如: 8889,8890,7000-7002</div>
+            </md-input-container>
+            <md-input-container flex style="margin-right:10px;">
+              <label>最大内存</label>
+              <input ng-model="entry.maxmemory">
+              <div class="hint">如: 1m, 1mb, 1g, 1gb</div>
+            </md-input-container>
+            <div class="md-input-container-box">
+              <!-- see https://github.com/angular/material/issues/2819 for why not using md-checkbox -->
+              <input type="checkbox" ng-model="entry.persistence" style="margin-top: 12px;">持久化</input>
+            </div>
+            <md-input-container>
+              <md-button aria-label="Delete node" ng-click="redisDeploy.deleteEntry(entry)" class="md-icon-button">
+                <md-tooltip>删除节点</md-tooltip>
+                <ng-md-icon icon="delete" size="20" style="fill:#A2A2A2;margin-left:2px;"></ng-md-icon>
+              </md-button>
+            </md-input-container>
+          </div>
+        </md-list-item>
+      </md-list>
+    </form>
+  </md-dialog-content>
+
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="redisDeploy.commit()" cv-wait="redisDeploy.submitting">提交</cv-submit>
+    <md-button ng-click="redisDeploy.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

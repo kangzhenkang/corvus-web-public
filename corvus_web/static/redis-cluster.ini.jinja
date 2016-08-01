@@ -1,0 +1,14 @@
+[program:redis-cluster-{{ port }}]
+command={{ redis_server }} /etc/redis/redis-cluster-{{ port }}.conf
+autostart=true
+autorestart=unexpected
+startsecs=3
+startretries=3
+stopsignal=QUIT
+stopwaitsecs=5
+user=redis
+stopasgroup=true
+killasgroup=true
+redirect_stderr=true
+stdout_logfile=syslog
+stderr_logfile=syslog

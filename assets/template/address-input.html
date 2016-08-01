@@ -1,0 +1,30 @@
+<form name="addressesForm">
+  <div layout="row" style="align-items:center;">
+    <span style="font-size:13px;">{{ subheader }}</span>
+    <span flex></span>
+    <md-button class="md-icon-button" ng-click="addEntry()">
+      <md-tooltip md-direction="top">添加</md-tooltip>
+      <ng-md-icon icon="add"></ng-md-icon>
+    </md-button>
+  </div>
+
+  <div flex layout="row" style="align-items:center;"
+      ng-repeat="entry in cvModel.entries">
+    <md-input-container flex>
+      <label>主机</label>
+      <md-icon><ng-md-icon icon="computer"></ng-md-icon></md-icon>
+      <input name="host_{{ entry.index }}" ng-model="entry.host">
+    </md-input-container>
+    <md-input-container flex>
+      <label>端口</label>
+      <input name="port_{{ entry.index }}" ng-model="entry.port">
+      <div class="hint">{{ portHint }}</div>
+    </md-input-container>
+    <md-button ng-click="deleteEntry(entry)" class="md-icon-button"
+        style="top:-9px;">
+      <md-tooltip>删除节点</md-tooltip>
+      <ng-md-icon icon="delete" size="20" style="fill:#A2A2A2;margin-left:2px;">
+      </ng-md-icon>
+    </md-button>
+  </div>
+</form>

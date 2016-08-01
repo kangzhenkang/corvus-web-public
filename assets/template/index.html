@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Corvus Web</title>
+    <base href="/">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/images/crow-32.png">
+    <link rel="stylesheet" href="/static/vendor.css">
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+
+  <body ng-app="corvus">
+    <script src="/static/vendor.js"></script>
+    <script src="/static/app.js"></script>
+
+    <div style="height:100%;overflow:auto;" cv-scroll="globalNav.scroll(reachBottom);">
+      <div style="min-height:101%;position:relative">
+        <div layout="column" layout-fill>
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <div class="cv-beta">beta</div>
+              <a ui-sref="cluster">Redis 集群管理面板</a>
+              <span flex></span>
+              <md-button cv-cluster-new ng-click="clusterNew.createCluster()">新建集群</md-button>
+              <md-button cv-node-add ng-click="nodeReg.registerNodes()">注册节点</md-button>
+              <md-menu md-position-mode="left bottom">
+                <md-button aria-label="more" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                  <ng-md-icon icon="more_vert"></ng-md-icon>
+                </md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button  cv-agent-register ng-click="agentRegister.register()">注册 AGENT</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button cv-cluster-add ng-click="clusterAdd.addCluster()">添加集群</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button cv-redis-deploy ng-click="redisDeploy.activate()">Redis 部署</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ui-sref="i({action:'proxy'})">代理管理</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ui-sref="i({action:'agent'})">AGENT 管理</md-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+            </div>
+          </md-toolbar>
+          <md-content style="padding:8px 50px;" md-scroll-y flex layout-padding>
+            <div flex layout="row"  cv-stick stick-top="8px" style="background-color: #FFFFFF;">
+              <md-tabs flex class="nav-bar" md-border-bottom>
+                <md-tab md-active="$state.includes('cluster')">
+                  <md-tab-label>
+                    <div class="nav-trigger" ui-sref="cluster">集群</div>
+                  </md-tab-label>
+                </md-tab>
+                <md-tab md-active="$state.is('node')">
+                  <md-tab-label>
+                    <div class="nav-trigger" ui-sref="node">Redis 节点</div>
+                  </md-tab-label>
+                </md-tab>
+                <md-tab md-active="$state.is('task')">
+                  <md-tab-label>
+                    <div class="nav-trigger" ui-sref="task">异步任务</div>
+                  </md-tab-label>
+                </md-tab>
+
+                <md-tab md-active="$state.is('i')" ng-disabled="globalNav.disable">
+                  <md-tab-label>
+                    <div class="nav-trigger" ui-sref="i">{{ globalNav.title }}</div>
+                  </md-tab-label>
+                </md-tab>
+
+              </md-tabs>
+              <md-input-container style="margin-bottom:-24px;padding:1px;width:24%;margin-left:18px;">
+                <label>搜索</label>
+                <input ng-model="globalNav.search" ng-disabled="globalNav.disableSearch">
+              </md-input-container>
+              <div ui-view="navbar"></div>
+            </div>
+            <md-content ui-view style="padding-bottom:70px;margin:0 5%;"></md-content>
+          </md-content>
+        </div>
+        <footer flex layout="row" class="cv-footer">
+          <span flex></span>
+          <span style="color:#767676;">© 2016 Eleme Arch.</span>
+          <span flex></span>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

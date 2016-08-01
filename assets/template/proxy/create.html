@@ -1,0 +1,31 @@
+<md-dialog flex="66" aria-label="add proxies or nodes" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>创建代理</h2>
+      <span style="text-align:center;" flex>{{ clusterProxy.clusterName }}</span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="clusterProxy.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;margin:9px 20%;overflow:hidden;">
+    <md-tabs class="cv-tabs" md-border-bottom>
+      <md-tab label="新建代理" ng-click="clusterProxy.action = 'create'">
+        <md-content style="padding:9px 24px 170px 24px;">
+          <cv-conf cv-model="clusterProxy"></cv-conf>
+        </md-content>
+      </md-tab>
+      <md-tab label="添加代理" ng-click="clusterProxy.action = 'add'">
+        <md-content style="padding:9px 24px 170px 24px;">
+          <cv-address-input cv-model="clusterProxy"
+            subheader="集群当前有 {{ clusterProxy.proxyCount }} 个代理"></cv-address-input>
+        </md-content>
+      </md-tab>
+    </md-tabs>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="clusterProxy.commit()" cv-wait="clusterProxy.submitting">提交</cv-submit>
+    <md-button ng-click="clusterProxy.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

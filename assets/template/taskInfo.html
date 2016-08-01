@@ -1,0 +1,51 @@
+<md-list>
+  <md-list-item>
+    <span class="decorated-title">{{ taskInfo.operation }}</span>
+    <p flex></p>
+    <md-button ng-click="taskInfo.refresh()" class="md-raised md-icon-button">
+      <md-tooltip md-direction="top">刷新</md-tooltip>
+      <ng-md-icon icon="refresh"></ng-md-icon>
+    </md-button>
+  </md-list-item>
+  <div ng-hide="taskInfo.loading">
+    <md-list-item layout="row" flex>
+      <p flex="25">任务 ID</p>
+      <p class="table-value">{{ taskInfo.id }}</p>
+    </md-list-item>
+    <md-divider></md-divider>
+    <md-list-item layout="row">
+      <p flex="25">创建时间</p>
+      <p class="table-value">{{ taskInfo.createAt }}</p>
+    </md-list-item>
+    <md-divider></md-divider>
+    <md-list-item layout="row">
+      <p flex="25">状态更新时间</p>
+      <p class="table-value">{{ taskInfo.updateAt }}</p>
+    </md-list-item>
+    <md-divider></md-divider>
+    <md-list-item layout="row">
+      <p flex="25">状态</p>
+      <p class="table-value"><span class="cv-label"
+        ng-class="taskInfo.statusClass">{{ taskInfo.statusLabel }}</p>
+    </md-list-item>
+    <md-divider></md-divider>
+    <md-list-item>
+      <div layout="row" style="width:100%;">
+        <p flex="25">参数</p>
+        <div flex style="max-height:279px;overflow:scroll;">
+          <pre class="table-value">{{ taskInfo.param | json }}</pre>
+        </div>
+        </div>
+    </md-list-item>
+    <md-divider ng-if="taskInfo.reason"></md-divider>
+    <md-list-item ng-if="taskInfo.reason">
+      <div layout="row" style="width:100%;">
+        <p flex="25">失败原因</p>
+        <div flex style="max-height:279px;overflow:scroll;">
+          <pre class="table-value">{{ taskInfo.reason }}</pre>
+        </div>
+      </div>
+    </md-list-item>
+    <div cv-progress="taskInfo.loading" cv-diameter="60"></div>
+  </div>
+</md-list>

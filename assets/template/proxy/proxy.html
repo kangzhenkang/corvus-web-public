@@ -1,0 +1,58 @@
+<form layout="column" name="confForm">
+  <md-input-container flex>
+    <label>代理的主机地址</label>
+    <md-icon><ng-md-icon icon="computer"></ng-md-icon></md-icon>
+    <input required name="host" ng-disabled="disableHost" ng-model="cvModel.host">
+  </md-input-container>
+  <div style="margin-bottom:9px;">代理配置：</div>
+  <md-input-container flex>
+    <label>Corvus 版本</label>
+    <md-icon><ng-md-icon icon="folder_open"></ng-md-icon></md-icon>
+    <input required name="version" ng-model="cvModel.config.version">
+    <div class="hint hint-icon">版本一般取最新的
+      <a style="text-decoration:none;" target="_blank"
+        href="https://github.com/eleme/corvus/releases">release</a>，如：0.2.0</div>
+  </md-input-container>
+  <md-input-container flex>
+    <label>端口</label>
+    <md-icon><ng-md-icon icon="radio_button_on"></ng-md-icon></md-icon>
+    <input required ng-disabled="disableHost" min="0" max="65535"
+      name="bind" type="number" ng-model="cvModel.config.bind">
+  </md-input-container>
+  <md-input-container flex>
+    <label>集群节点</label>
+    <md-icon><ng-md-icon icon="dns"></ng-md-icon></md-icon>
+    <input required name="node" ng-model="cvModel.config.node">
+    <div class="hint hint-icon">Redis 集群中任意节点</div>
+  </md-input-container>
+  <md-input-container flex>
+    <label>线程数</label>
+    <md-icon><ng-md-icon icon="clear_all"></ng-md-icon></md-icon>
+    <input name="thread" type="number" ng-model="cvModel.config.thread">
+  </md-input-container>
+  <div layout="row">
+    <md-input-container flex>
+      <label>客户端超时时间</label>
+      <md-icon><ng-md-icon icon="timer"></ng-md-icon></md-icon>
+      <input min="0" name="clientTimeout" type="number"
+        ng-model="cvModel.config.client_timeout">
+    </md-input-container>
+    <md-input-container flex>
+      <label>服务端超时时间</label>
+      <md-icon><ng-md-icon icon="av_timer"></ng-md-icon></md-icon>
+      <input min="0" name="serverTimeout" type="number"
+        ng-model="cvModel.config.server_timeout">
+    </md-input-container>
+  </div>
+  <md-input-container flex>
+    <label>mbuf 大小</label>
+    <md-icon><ng-md-icon icon="layers"></ng-md-icon></md-icon>
+    <input name="bufsize" type="number" ng-model="cvModel.config.bufsize">
+    <div class="hint hint-icon">单位是字节数，大小: [64, 16384]. 如果不确定就不要填</div>
+  </md-input-container>
+  <md-input-container flex>
+    <label>statsd 地址</label>
+    <md-icon><ng-md-icon icon="trending_up"></ng-md-icon></md-icon>
+    <input name="statsd" ng-model="cvModel.config.statsd">
+  </md-input-container>
+</form>

@@ -1,0 +1,41 @@
+<md-dialog flex="66" aria-label="Create Cluster" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>添加集群</h2>
+      <span style="text-align:center;" flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="clusterAdd.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;">
+    <form name="clusterAddForm" style="margin:34px 24%;">
+      <md-input-container class="md-block">
+        <label>集群名</label>
+        <md-icon><ng-md-icon icon="assignment"></ng-md-icon></md-icon>
+        <input name="name" ng-model="clusterAdd.name">
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>待加入的集群中的任意节点</label>
+        <md-icon><ng-md-icon icon="subject"></ng-md-icon></md-icon>
+        <input name="node" ng-model="clusterAdd.node" ng-change="clusterAdd.input()">
+        <div class="hint" style="margin-left:34px;">host:port, 如: localhost:8000</div>
+      </md-input-container>
+      <table md-table style="margin-top:44px;">
+        <tbody md-body>
+          <tr md-row ng-repeat="node in clusterAdd.nodes">
+            <td md-cell>{{ node.id }}</td>
+            <td md-cell>{{ node.host }}:{{ node.port }}</td>
+            <td md-cell>{{ node.role == 'master' ? '主' : '从' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div cv-progress="clusterAdd.loading" cv-diameter="40"></div>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="clusterAdd.commit()" cv-wait="clusterAdd.submitting">提交</cv-submit>
+    <md-button ng-click="clusterAdd.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

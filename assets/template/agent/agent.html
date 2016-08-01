@@ -1,0 +1,21 @@
+<md-dialog flex="66" aria-label="add proxies or nodes" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>注册 AGENT</h2>
+      <span flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="agentRegister.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content style="height:100%;padding:0 20%;">
+    <cv-address-input cv-model="agentRegister"
+      port-hint="每个 host 只能有一个 agent 端口"></cv-address-input>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="agentRegister.commit()"
+      cv-wait="agentRegister.submitting">提交</cv-submit>
+    <md-button ng-click="agentRegister.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>

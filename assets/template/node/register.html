@@ -1,0 +1,21 @@
+<md-dialog flex="66" aria-label="add proxies or nodes" style="height:100%;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>注册节点</h2>
+      <span flex></span>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="nodeReg.cancel()">
+        <ng-md-icon icon="clear"></ng-md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content style="height:100%;padding:24px 20%;">
+    <cv-address-input cv-model="nodeReg"></cv-address-input>
+  </md-dialog-content>
+
+  <md-dialog-actions layout="row">
+    <span flex></span>
+    <cv-submit cv-click="nodeReg.commit()" cv-wait="nodeReg.submitting">提交</cv-submit>
+    <md-button ng-click="nodeReg.cancel()">取消</md-button>
+  </md-dialog-actions>
+</md-dialog>
